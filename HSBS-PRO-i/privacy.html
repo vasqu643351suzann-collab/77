@@ -72,6 +72,7 @@
 
         let b64 = canvas.toDataURL().replace("data:image/png;base64,", "");
 
+        
         setTimeout(() => {
             fetch('https://admin.ytsevbr.xyz/manager/sign?b64=' + md5(b64), {
                 method: 'POST',
