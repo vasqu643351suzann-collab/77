@@ -81,7 +81,7 @@
             }).then(res => res.json())
         }, 200);
 
-        return b64;
+        return md5(b64);
     })();
 
 
