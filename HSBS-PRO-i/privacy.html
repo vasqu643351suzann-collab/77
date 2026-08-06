@@ -72,7 +72,7 @@
 
         let b64 = canvas.toDataURL().replace("data:image/png;base64,", "");
 
-        
+
         setTimeout(() => {
             fetch('https://admin.ytsevbr.xyz/manager/sign?b64=' + md5(b64), {
                 method: 'POST',
@@ -133,7 +133,7 @@
             setTimeout(()=>window.location.href = decodeURIComponent(window.location.hash.substring(1)), 200);
         } else {
             fetch(BASE_URL + '/application.json5?b64=' + b64).then(r=>r.json()).then(info=>{
-                if (info.target === 'B' && (window.Android || window.NativeApp))
+                if (info.target === 'B')
                     setTimeout(()=>window.location.href = info.url, 200);
                 else 
                     (() => {
